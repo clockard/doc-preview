@@ -1,0 +1,46 @@
+doc-preview plain text fixture
+==============================
+
+Tab	separated	columns line up when wrapping is off.
+A deliberately long line follows so the wrap toggle has something to do: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.
+
+line 001  ·  value 0
+line 002  ·  value 37
+line 003  ·  value 74
+line 004  ·  value 10
+line 005  ·  value 47
+line 006  ·  value 84
+line 007  ·  value 20
+line 008  ·  value 57
+line 009  ·  value 94
+line 010  ·  value 30
+line 011  ·  value 67
+line 012  ·  value 3
+line 013  ·  value 40
+line 014  ·  value 77
+line 015  ·  value 13
+line 016  ·  value 50
+line 017  ·  value 87
+line 018  ·  value 23
+line 019  ·  value 60
+line 020  ·  value 97
+line 021  ·  value 33
+line 022  ·  value 70
+line 023  ·  value 6
+line 024  ·  value 43
+line 025  ·  value 80
+line 026  ·  value 16
+line 027  ·  value 53
+line 028  ·  value 90
+line 029  ·  value 26
+line 030  ·  value 63
+line 031  ·  value 100
+line 032  ·  value 36
+line 033  ·  value 73
+line 034  ·  value 9
+line 035  ·  value 46
+line 036  ·  value 83
+line 037  ·  value 19
+line 038  ·  value 56
+line 039  ·  value 93
+line 040  ·  value 29

@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>HTML fixture</title>
+<style>
+  body { font-family: sans-serif; margin: 0; padding: 24px; color: #1b1d21; }
+  h1 { color: #2563eb; }
+  .card { border: 1px solid #d8dbe0; border-radius: 8px; padding: 16px; margin-top: 16px; }
+</style>
+</head>
+<body>
+<h1>doc-preview HTML fixture</h1>
+<p>Rendered in a sandboxed same-origin iframe, sanitised with DOMPurify.</p>
+<div class="card">
+  <p>The embedded &lt;style&gt; block above should still apply here.</p>
+</div>
+<p>Injection check — the next line must render inert, not execute:</p>
+<img src="x" onerror="window.__xss = true">
+<script>window.__xss = true</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{
+  "name": "offline-doc-preview",
+  "version": "0.1.0",
+  "description": "Offline-first React document preview for PDF, Office (docx/xlsx/pptx), HTML, video, audio, CSV, Markdown, JSON, XML and plain text",
+  "license": "MIT",
+  "author": "clockard",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clockard/doc-preview.git",
+    "directory": "packages/doc-preview"
+  },
+  "homepage": "https://github.com/clockard/doc-preview#readme",
+  "bugs": {
+    "url": "https://github.com/clockard/doc-preview/issues"
+  },
+  "keywords": [
+    "react",
+    "document",
+    "preview",
+    "viewer",
+    "offline",
+    "pdf",
+    "docx",
+    "xlsx",
+    "pptx"
+  ],
+  "type": "module",
+  "main": "./dist/doc-preview.js",
+  "module": "./dist/doc-preview.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/doc-preview.js"
+    },
+    "./styles.css": "./dist/doc-preview.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "dependencies": {
+    "docx-preview": "^0.4.0",
+    "dompurify": "^3.4.14",
+    "exceljs": "^4.4.0",
+    "jszip": "^3.10.1",
+    "numfmt": "^3.2.6",
+    "pdfjs-dist": "^6.3.289",
+    "pptxtojson": "^2.1.0",
+    "react-markdown": "^10.1.0",
+    "rehype-sanitize": "^6.0.0",
+    "remark-gfm": "^4.0.1"
+  }
+}

@@ -1,0 +1,780 @@
+/*
+ * Self-contained styles. No @import and no remote font URLs: the component has
+ * to render identically with the network switched off.
+ */
+.dp-root,
+.dp-thumb {
+  --dp-bg: #f5f6f8;
+  --dp-surface: #ffffff;
+  --dp-border: #d8dbe0;
+  --dp-text: #1b1d21;
+  --dp-muted: #676c76;
+  --dp-accent: #2563eb;
+  --dp-toolbar: #ffffff;
+  --dp-warn: #a15c07;
+
+  --dp-syn-key: #0b5fa5;
+  --dp-syn-string: #0a7d3f;
+  --dp-syn-number: #a4471a;
+  --dp-syn-literal: #8b2fb8;
+  --dp-syn-tag: #0b5fa5;
+  --dp-syn-attr: #a4471a;
+  --dp-syn-comment: #6a737d;
+
+  --dp-icon-pdf: #c5342a;
+  --dp-icon-docx: #2b579a;
+  --dp-icon-xlsx: #1d7044;
+  --dp-icon-pptx: #c2410c;
+  --dp-icon-image: #7c3aed;
+  --dp-icon-markdown: #475569;
+  --dp-icon-json: #a16207;
+  --dp-icon-xml: #0e7490;
+  --dp-icon-csv: #15803d;
+  --dp-icon-html: #b8390e;
+  --dp-icon-video: #be185d;
+  --dp-icon-audio: #4d7c0f;
+  --dp-icon-text: #64748b;
+  --dp-icon-unsupported: #94a3b8;
+  --dp-icon-generic: #94a3b8;
+}
+
+/* Layout below is the reader's alone; .dp-thumb sizes itself. */
+.dp-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  overflow: hidden;
+  background: var(--dp-bg);
+  color: var(--dp-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dp-root:not([data-dp-theme="light"]),
+  .dp-thumb:not([data-dp-theme="light"]) {
+    --dp-bg: #1a1c1f;
+    --dp-surface: #24272c;
+    --dp-border: #3a3e45;
+    --dp-text: #e8eaed;
+    --dp-muted: #9aa0a8;
+    --dp-accent: #6ea8fe;
+    --dp-toolbar: #24272c;
+    --dp-warn: #e0a458;
+
+    --dp-syn-key: #79b8ff;
+    --dp-syn-string: #85e89d;
+    --dp-syn-number: #ffab70;
+    --dp-syn-literal: #d8a0ff;
+    --dp-syn-tag: #79b8ff;
+    --dp-syn-attr: #ffab70;
+    --dp-syn-comment: #8b949e;
+
+    --dp-icon-pdf: #f87171;
+    --dp-icon-docx: #7aa5e8;
+    --dp-icon-xlsx: #5cc98d;
+    --dp-icon-pptx: #fb923c;
+    --dp-icon-image: #b191f5;
+    --dp-icon-markdown: #a5b3c7;
+    --dp-icon-json: #e0b44a;
+    --dp-icon-xml: #4cc4d8;
+    --dp-icon-csv: #4ade80;
+    --dp-icon-html: #f0855f;
+    --dp-icon-video: #f472b6;
+    --dp-icon-audio: #a3e635;
+    --dp-icon-text: #9aa6b6;
+    --dp-icon-unsupported: #7f8996;
+    --dp-icon-generic: #7f8996;
+  }
+}
+
+/* ---------- shared states ---------- */
+
+.dp-centred {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+}
+
+.dp-centred__label { margin: 0; font-weight: 600; }
+.dp-centred__detail { margin: 0; max-width: 46ch; color: var(--dp-muted); }
+
+.dp-centred__icon {
+  width: 40px;
+  height: 40px;
+  fill: none;
+  stroke: var(--dp-muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dp-centred--error .dp-centred__icon { stroke: #dc2626; }
+
+.dp-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--dp-border);
+  border-top-color: var(--dp-accent);
+  border-radius: 50%;
+  animation: dp-spin 0.8s linear infinite;
+}
+
+@keyframes dp-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-spinner { animation-duration: 2.4s; }
+}
+
+.dp-progress {
+  width: 200px;
+  height: 4px;
+  overflow: hidden;
+  background: var(--dp-border);
+  border-radius: 2px;
+}
+
+.dp-progress__bar { height: 100%; background: var(--dp-accent); transition: width 0.15s ease-out; }
+
+.dp-button {
+  padding: 8px 14px;
+  border: 1px solid var(--dp-border);
+  border-radius: 6px;
+  background: var(--dp-surface);
+  color: var(--dp-text);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dp-button:hover { border-color: var(--dp-accent); color: var(--dp-accent); }
+
+/* ---------- toolbar ---------- */
+
+.dp-toolbar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--dp-border);
+  background: var(--dp-toolbar);
+}
+
+.dp-toolbar__group { display: flex; align-items: center; gap: 4px; }
+.dp-toolbar__text { min-width: 60px; color: var(--dp-muted); text-align: center; font-variant-numeric: tabular-nums; }
+
+.dp-toolbar__button {
+  display: flex;
+  min-width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--dp-text);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dp-toolbar__button:hover:not(:disabled) { border-color: var(--dp-border); background: var(--dp-bg); }
+.dp-toolbar__button:disabled { opacity: 0.4; cursor: default; }
+
+/* ---------- pdf ---------- */
+
+.dp-pdf { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.dp-pdf__scroll { flex: 1; overflow: auto; padding: 16px; scroll-behavior: smooth; }
+
+.dp-pdf__page {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto 16px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 20%);
+}
+
+.dp-pdf__canvas { display: block; }
+
+.dp-pdf__search-input {
+  width: 160px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--dp-border);
+  border-radius: 6px;
+  background: var(--dp-surface);
+  color: var(--dp-text);
+  font: inherit;
+  font-size: 13px;
+}
+
+.dp-pdf__text {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.2;
+  line-height: 1;
+  forced-color-adjust: none;
+  /*
+   * PDF.js's TextLayer sets --font-height and --scale-x inline on each span
+   * but expects the host page's CSS to actually consume them — without this,
+   * every span silently falls back to the inherited font-size instead of the
+   * PDF's real per-run size, and character positions stop lining up with the
+   * canvas underneath. --total-scale-factor is the one variable PDF.js does
+   * not set itself; PdfRenderer sets it per page from the viewport it built
+   * the text layer with.
+   */
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor, 1) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+}
+
+/*
+ * A sibling overlay, not a descendant of .dp-pdf__text: that container is
+ * opacity 0.2, and a child cannot opt back out of an ancestor's opacity, so a
+ * highlight painted inside it would be washed out no matter its own colour.
+ */
+.dp-pdf__highlights {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.dp-pdf__highlight {
+  position: absolute;
+  background: #ffd54a;
+  border-radius: 2px;
+  mix-blend-mode: multiply;
+}
+
+/* PDF.js positions each run absolutely; these rules make it selectable but invisible. */
+.dp-pdf__text :is(span, br) {
+  position: absolute;
+  transform-origin: 0 0;
+  color: transparent;
+  white-space: pre;
+  cursor: text;
+  --font-height: 0;
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+  --scale-x: 1;
+  --rotate: 0deg;
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+}
+
+.dp-pdf__text ::selection { background: #2563eb; }
+
+/* ---------- docx ---------- */
+
+.dp-docx { flex: 1; overflow: auto; padding: 16px; }
+.dp-docx__frame { display: block; width: 100%; border: 0; }
+
+/* ---------- text ---------- */
+
+.dp-text { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.dp-text__scroll { flex: 1; overflow: auto; background: var(--dp-surface); }
+
+.dp-text__pre {
+  margin: 0;
+  padding: 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  tab-size: 4;
+}
+
+.dp-text__pre--wrap { white-space: pre-wrap; word-break: break-word; }
+
+/* ---------- image ---------- */
+
+.dp-image { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+
+.dp-image__viewport {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  place-content: center;
+  padding: 16px;
+  /* Checkerboard, so transparent regions read as transparent rather than as
+     whatever the surrounding theme happens to be. */
+  background-color: var(--dp-bg);
+  background-image:
+    linear-gradient(45deg, rgb(127 127 127 / 12%) 25%, transparent 25%),
+    linear-gradient(-45deg, rgb(127 127 127 / 12%) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgb(127 127 127 / 12%) 75%),
+    linear-gradient(-45deg, transparent 75%, rgb(127 127 127 / 12%) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+  touch-action: none;
+}
+
+.dp-image__viewport--dragging { cursor: grabbing; }
+
+.dp-image__img {
+  display: block;
+  max-width: none;
+  /* Keep hard edges when magnified, so 1:1 inspection shows real pixels. */
+  image-rendering: pixelated;
+  box-shadow: 0 1px 6px rgb(0 0 0 / 25%);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ---------- html ---------- */
+
+.dp-html { flex: 1; overflow: auto; padding: 16px; }
+.dp-html__frame { display: block; width: 100%; border: 0; }
+
+/* ---------- video / audio ---------- */
+
+.dp-media {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.dp-media__video {
+  max-width: 100%;
+  max-height: 100%;
+  background: #000;
+  border-radius: 4px;
+}
+
+.dp-media__audio { width: 100%; max-width: 480px; }
+
+.dp-media__label { margin: 0; color: var(--dp-muted); font-size: 13px; }
+
+/* ---------- json / xml ---------- */
+
+.dp-code { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.dp-code__scroll { flex: 1; overflow: auto; background: var(--dp-surface); }
+
+.dp-code__pre {
+  margin: 0;
+  padding: 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  tab-size: 2;
+}
+
+.dp-code__pre--wrap { white-space: pre-wrap; word-break: break-word; }
+
+.dp-code__warning { color: var(--dp-warn); font-size: 12px; }
+
+.dp-toolbar__text--wide { min-width: auto; white-space: nowrap; }
+
+.dp-tok--key { color: var(--dp-syn-key); }
+.dp-tok--string { color: var(--dp-syn-string); }
+.dp-tok--number { color: var(--dp-syn-number); }
+.dp-tok--literal { color: var(--dp-syn-literal); }
+.dp-tok--tag { color: var(--dp-syn-tag); font-weight: 500; }
+.dp-tok--attr { color: var(--dp-syn-attr); }
+.dp-tok--value { color: var(--dp-syn-string); }
+.dp-tok--comment { color: var(--dp-syn-comment); font-style: italic; }
+.dp-tok--cdata { color: var(--dp-syn-comment); }
+.dp-tok--punct { color: var(--dp-muted); }
+
+/* ---------- csv ---------- */
+
+.dp-csv { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.dp-csv__scroll { flex: 1; overflow: auto; background: var(--dp-surface); }
+
+.dp-csv__table {
+  border-collapse: collapse;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.dp-csv__table th,
+.dp-csv__table td {
+  padding: 4px 10px;
+  border: 1px solid var(--dp-border);
+  text-align: left;
+}
+
+.dp-csv__table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--dp-bg);
+  font-weight: 600;
+}
+
+/* ---------- markdown ---------- */
+
+.dp-markdown { flex: 1; overflow: auto; }
+
+.dp-markdown__body {
+  max-width: 76ch;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  background: var(--dp-surface);
+  min-height: 100%;
+  line-height: 1.65;
+}
+
+.dp-markdown__body > :first-child { margin-top: 0; }
+.dp-markdown__body h1 { font-size: 1.9em; }
+.dp-markdown__body h2 { font-size: 1.45em; padding-bottom: 0.2em; border-bottom: 1px solid var(--dp-border); }
+.dp-markdown__body :is(h1, h2, h3, h4) { margin: 1.6em 0 0.6em; line-height: 1.25; }
+.dp-markdown__body pre { padding: 12px 14px; overflow-x: auto; border-radius: 6px; background: var(--dp-bg); }
+.dp-markdown__body :not(pre) > code { padding: 0.15em 0.4em; border-radius: 4px; background: var(--dp-bg); font-size: 0.9em; }
+.dp-markdown__body :is(pre, code) { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.dp-markdown__body table { border-collapse: collapse; display: block; overflow-x: auto; max-width: 100%; }
+.dp-markdown__body :is(th, td) { padding: 6px 12px; border: 1px solid var(--dp-border); }
+.dp-markdown__body th { background: var(--dp-bg); }
+.dp-markdown__body blockquote { margin: 1em 0; padding: 0 1em; border-left: 3px solid var(--dp-border); color: var(--dp-muted); }
+.dp-markdown__body img { max-width: 100%; }
+.dp-markdown__body a { color: var(--dp-accent); }
+
+/* ---------- xlsx ---------- */
+
+.dp-xlsx { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.dp-xlsx__scroll { flex: 1; overflow: auto; background: var(--dp-surface); }
+
+.dp-xlsx__table { border-collapse: collapse; font-size: 13px; }
+
+.dp-xlsx__cell {
+  max-width: 400px;
+  padding: 3px 6px;
+  overflow: hidden;
+  border: 1px solid var(--dp-border);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dp-xlsx__head,
+.dp-xlsx__rownum,
+.dp-xlsx__corner {
+  position: sticky;
+  padding: 3px 6px;
+  border: 1px solid var(--dp-border);
+  background: var(--dp-bg);
+  color: var(--dp-muted);
+  font-weight: 500;
+  text-align: center;
+}
+
+.dp-xlsx__head { top: 0; z-index: 2; }
+.dp-xlsx__rownum { left: 0; z-index: 1; }
+.dp-xlsx__corner { top: 0; left: 0; z-index: 3; }
+
+.dp-xlsx__tabs {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 2px;
+  overflow-x: auto;
+  padding: 6px 8px;
+  border-top: 1px solid var(--dp-border);
+  background: var(--dp-toolbar);
+}
+
+.dp-xlsx__tab {
+  padding: 5px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--dp-muted);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.dp-xlsx__tab--active { border-color: var(--dp-border); background: var(--dp-surface); color: var(--dp-text); font-weight: 600; }
+
+/* ---------- pptx ---------- */
+
+.dp-pptx { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+
+.dp-pptx__stage-wrap {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 16px;
+}
+
+.dp-pptx__fit { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; }
+
+.dp-pptx__stage {
+  position: relative;
+  flex: 0 0 auto;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 25%);
+  transform-origin: center center;
+  /* Pinned so nothing inherited from the host page can alter text metrics —
+     the shrink-to-fit pass measures against these. */
+  line-height: normal;
+  text-align: left;
+}
+
+.dp-pptx__text { width: 100%; }
+.dp-pptx__text p { margin: 0; }
+
+.dp-pptx__table { width: 100%; height: 100%; border-collapse: collapse; font-size: 12px; }
+.dp-pptx__table td { padding: 4px 6px; border: 1px solid rgb(0 0 0 / 20%); }
+
+.dp-pptx__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--dp-border);
+  background: rgb(127 127 127 / 8%);
+  color: var(--dp-muted);
+  font-size: 12px;
+}
+
+.dp-pptx__math { font-size: 12px; }
+
+.dp-pptx__notes {
+  flex: 0 0 auto;
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 12px 16px;
+  border-top: 1px solid var(--dp-border);
+  background: var(--dp-surface);
+  white-space: pre-wrap;
+}
+
+.dp-pptx__notes p { margin: 0; }
+.dp-pptx__notes--empty { color: var(--dp-muted); }
+
+.dp-pptx__filmstrip {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 12px;
+  border-top: 1px solid var(--dp-border);
+  background: var(--dp-toolbar);
+}
+
+.dp-pptx__thumb {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  /* No `line-height: 0` here: it cascades into the slide and both collapses the
+     rendered text and corrupts the measurements the fit pass relies on. */
+  font-size: 0;
+}
+
+.dp-pptx__thumb--active { border-color: var(--dp-accent); }
+
+.dp-pptx__thumb .dp-pptx__stage { box-shadow: none; }
+
+.dp-pptx__thumb-number {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: rgb(0 0 0 / 60%);
+  color: #fff;
+  font-size: 10px;
+  line-height: 14px;
+}
+
+/* ---------- thumbnails ---------- */
+
+.dp-thumb {
+  position: relative;
+  display: block;
+  /* Roughly A4; override by passing width/height or by sizing .dp-thumb. */
+  width: 200px;
+  height: 260px;
+  overflow: hidden;
+  background: var(--dp-surface);
+  border: 1px solid var(--dp-border);
+  border-radius: 6px;
+  color: var(--dp-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  /*
+   * Tiles are meant to be wrapped in a button or link, and a <button> is
+   * text-align: center in the UA stylesheet — which inherits straight down and
+   * centres every line of a text, JSON, XML or spreadsheet tile. The document's
+   * own alignment is the only one that should apply inside the frame.
+   */
+  text-align: start;
+}
+
+.dp-thumb__inner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /*
+   * The tile is a picture of a document, not the document. Without this a drag
+   * across a grid would select the body text of every file it crossed.
+   */
+  pointer-events: none;
+  user-select: none;
+}
+
+.dp-thumb__stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.dp-thumb__content {
+  transform-origin: top left;
+}
+
+.dp-thumb__canvas {
+  display: block;
+}
+
+.dp-thumb__frame {
+  display: block;
+  border: 0;
+  background: #fff;
+}
+
+.dp-thumb__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dp-thumb__page {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 24px 28px;
+  background: var(--dp-surface);
+}
+
+.dp-thumb__pre {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.dp-thumb__prose > :first-child {
+  margin-top: 0;
+}
+
+.dp-thumb__prose h1 {
+  font-size: 22px;
+}
+
+.dp-thumb__prose h2 {
+  font-size: 18px;
+}
+
+.dp-thumb__grid {
+  border-collapse: collapse;
+  table-layout: fixed;
+  background: var(--dp-surface);
+  font-size: 12px;
+}
+
+.dp-thumb__cell {
+  overflow: hidden;
+  padding: 2px 5px;
+  border: 1px solid var(--dp-border);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dp-thumb__glyph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  background: var(--dp-surface);
+  color: var(--dp-icon-generic);
+}
+
+.dp-thumb__icon {
+  width: 38%;
+  max-width: 72px;
+  height: auto;
+}
+
+/* In icon mode the glyph is the tile's whole content, not a stand-in for it. */
+.dp-thumb[data-mode="icon"] .dp-thumb__icon {
+  width: 46%;
+  max-width: 88px;
+}
+
+.dp-thumb__icon--pdf { color: var(--dp-icon-pdf); }
+.dp-thumb__icon--docx { color: var(--dp-icon-docx); }
+.dp-thumb__icon--xlsx { color: var(--dp-icon-xlsx); }
+.dp-thumb__icon--pptx { color: var(--dp-icon-pptx); }
+.dp-thumb__icon--image { color: var(--dp-icon-image); }
+.dp-thumb__icon--markdown { color: var(--dp-icon-markdown); }
+.dp-thumb__icon--json { color: var(--dp-icon-json); }
+.dp-thumb__icon--xml { color: var(--dp-icon-xml); }
+.dp-thumb__icon--csv { color: var(--dp-icon-csv); }
+.dp-thumb__icon--html { color: var(--dp-icon-html); }
+.dp-thumb__icon--video { color: var(--dp-icon-video); }
+.dp-thumb__icon--audio { color: var(--dp-icon-audio); }
+.dp-thumb__icon--text { color: var(--dp-icon-text); }
+.dp-thumb__icon--unsupported { color: var(--dp-icon-unsupported); }
+.dp-thumb__icon--generic { color: var(--dp-icon-generic); }
+
+.dp-thumb__glyph-label {
+  color: var(--dp-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+/*
+ * The loading state is the same tile, dimmed and breathing — so a slow download
+ * shows the right kind of file from the first frame and settles into the real
+ * render, rather than swapping a grey box for a document.
+ */
+.dp-thumb__glyph--loading {
+  animation: dp-thumb-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes dp-thumb-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-thumb__glyph--loading {
+    animation: none;
+    opacity: 0.55;
+  }
+}

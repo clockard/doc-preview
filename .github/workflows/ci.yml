@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - run: npm ci
+
+      # Offline check, typecheck, unit tests, library build — the same
+      # pipeline documented in the README and run locally before a commit.
+      - run: npm run verify
+
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      # Regenerates the fixtures and copies PDF.js's cmaps/standard_fonts into
+      # the demo's public/ dir — required locally too, per the README's dev setup.
+      - run: npm run fixtures
+
+      # Drives every format in headless Chromium against the built demo app.
+      - run: npm run smoke
+
+      # Same, with every off-origin request blocked — the project's offline
+      # guarantee, enforced rather than asserted.
+      - run: npm run smoke:offline
