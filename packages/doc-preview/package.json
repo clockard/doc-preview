@@ -1,6 +1,6 @@
 {
   "name": "offline-doc-preview",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Offline-first React document preview for PDF, Office (docx/xlsx/pptx), HTML, video, audio, CSV, Markdown, JSON, XML and plain text",
   "license": "MIT",
   "author": "clockard",
