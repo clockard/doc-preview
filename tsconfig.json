@@ -15,7 +15,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "node"],
     "baseUrl": ".",
     // Typecheck against source so a missing dist build never breaks `npm run typecheck`.
     "paths": { "doc-preview": ["packages/doc-preview/src/index.ts"] }
