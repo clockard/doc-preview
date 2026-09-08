@@ -1,6 +1,6 @@
 # doc-preview
 
-Two React components — a full-pane reader and a thumbnail tile — that render
+Two React components (a full-pane reader and a thumbnail tile) that render
 PDF, Word, Excel, PowerPoint, images, HTML, video, audio, Markdown, JSON, XML,
 CSV and plain text **entirely in the browser, with no external services of
 any kind.**
@@ -8,8 +8,8 @@ any kind.**
 Nothing is uploaded. Nothing is converted server-side. No CDN scripts, no remote
 fonts, no Office Online or Google Docs viewer embedded behind the scenes. The
 only network request the component makes is fetching the document you pointed it
-at, from wherever you already serve it. Everything after that — parsing,
-layout, rendering — happens locally, so it works on an air-gapped machine and
+at, from wherever you already serve it. Everything after that (parsing,
+layout, rendering) happens locally, so it works on an air-gapped machine and
 behind a firewall that blocks everything.
 
 That is unusual enough to be worth stating plainly: several popular React
@@ -18,8 +18,8 @@ which means the file leaves the building. This one has no such path, and there
 are two checks in the build that fail if one ever appears.
 
 ```tsx
-import { DocumentPreview } from 'doc-preview'
-import 'doc-preview/styles.css'
+import { DocumentPreview } from 'offline-doc-preview'
+import 'offline-doc-preview/styles.css'
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
 <DocumentPreview
@@ -30,10 +30,10 @@ import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 ```
 
 For a file listing, `DocumentThumbnail` takes the same inputs and renders a
-single representative frame — page 1, slide 1, the top-left of the first sheet:
+single representative frame: page 1, slide 1, or the top-left of the first sheet:
 
 ```tsx
-import { DocumentThumbnail } from 'doc-preview'
+import { DocumentThumbnail } from 'offline-doc-preview'
 
 <DocumentThumbnail url="/files/report.docx" fit="cover" pdf={{ workerSrc }} />
 ```
@@ -47,23 +47,23 @@ import { DocumentThumbnail } from 'doc-preview'
 | Excel | `.xlsx` | [`exceljs`](https://github.com/exceljs/exceljs) + [`numfmt`](https://github.com/borgar/numfmt) | Sheet tabs, merged cells, frozen headers, real number formats, row virtualisation |
 | PowerPoint | `.pptx` | [`pptxtojson`](https://github.com/pipipi-pikachu/pptxtojson) | Slide navigation, thumbnails, speaker notes; see the fidelity note below |
 | Images | `.png` `.jpg` `.jpeg` `.jfif` `.gif` `.webp` `.avif` `.bmp` `.ico` `.svg` | the browser | Zoom, pan, fit / 1:1, transparency checkerboard |
-| TIFF | `.tif` `.tiff` | the browser | Safari only — see below |
+| TIFF | `.tif` `.tiff` | the browser | Safari only (see below) |
 | Markdown | `.md` `.markdown` `.mdown` `.mkd` | [`react-markdown`](https://github.com/remarkjs/react-markdown) | GFM tables and task lists, sanitised |
 | JSON | `.json` `.jsonc` `.jsonl` `.ndjson` | built in | Pretty-printed, highlighted, raw toggle |
 | XML | `.xml` `.xsd` `.xsl` `.xslt` `.rss` `.atom` | built in | Pretty-printed, highlighted, raw toggle |
 | HTML | `.html` `.htm` | [`DOMPurify`](https://github.com/cure53/DOMPurify) | Sanitised, rendered in an isolated iframe |
-| Video | `.mp4` `.webm` `.mov` `.ogv` | the browser | Native controls; codec support varies — see below |
+| Video | `.mp4` `.webm` `.mov` `.ogv` | the browser | Native controls; codec support varies (see below) |
 | Audio | `.mp3` `.wav` `.m4a` `.oga` `.ogg` | the browser | Native controls |
 | CSV / TSV | `.csv` `.tsv` | built in | Rendered as a table, raw toggle |
 | Text | `.txt` `.text` `.log` `.yaml` `.yml` | built in | Encoding detection, wrap toggle |
 
-Anything else — including legacy `.doc`, `.xls` and `.ppt` — renders a clear
+Anything else, including legacy `.doc`, `.xls` and `.ppt`, renders a clear
 "unsupported format" state with a download link rather than failing.
 
 ## Installation
 
 ```bash
-npm install doc-preview
+npm install offline-doc-preview
 ```
 
 React 18 or 19 is a peer dependency. The format libraries are regular
@@ -72,7 +72,7 @@ downloads the PDF engine or the spreadsheet parser.
 
 ## PDF setup
 
-The PDF renderer needs a worker, and it will not guess where one lives — the
+The PDF renderer needs a worker, and it will not guess where one lives: the
 consuming app's bundler is the only thing that knows. Without it you get an
 explicit error telling you what to pass, rather than a silent fallback.
 
@@ -95,22 +95,22 @@ cp -r node_modules/pdfjs-dist/standard_fonts public/pdfjs/standard_fonts
 pdf={{ workerSrc, cMapUrl: '/pdfjs/cmaps/', standardFontDataUrl: '/pdfjs/standard_fonts/' }}
 ```
 
-Both are optional. Omitted, PDF.js skips those resources — it does **not** fall
-back to a remote host — so text renders with substituted fonts instead.
+Both are optional. Omitted, PDF.js skips those resources (it does **not** fall
+back to a remote host), so text renders with substituted fonts instead.
 
 ## PDF search
 
 PDF is the one format where the browser's native Ctrl+F does not reliably
 work, and that is what this exists to fix. Pages render lazily as they near
-the viewport — the difference between a snappy reader and a multi-second
-freeze on a long document — so only the pages currently near the viewport
+the viewport (the difference between a snappy reader and a multi-second
+freeze on a long document), so only the pages currently near the viewport
 have a text layer mounted at any moment. Ctrl+F can only find text that is
 actually in the DOM; a match forty pages away is invisible to it until you
 scroll there yourself.
 
 Click the search icon in the PDF toolbar (or the results are equivalent
 either way): the whole document's text is extracted once, on the first
-search, and cached — cheap enough to do for the full document at once, with
+search, and cached: cheap enough to do for the full document at once, with
 no reason to pay that cost for a document nobody searches. Results are
 reported per page, with **Enter**/**Shift+Enter** or the ‹ › buttons
 stepping between pages that contain a match; each jump scrolls straight to
@@ -120,15 +120,15 @@ it has.
 The highlight is painted as an overlay, not by wrapping the match in markup:
 the text layer that makes selection and copy work is invisible by design
 (`opacity: 0.2`, dimming the browser's own selection colour), and a
-highlight painted as its descendant — by any method, including the CSS
-Custom Highlight API — would inherit that same dimming with no way for a
+highlight painted as its descendant, by any method, including the CSS
+Custom Highlight API, would inherit that same dimming with no way for a
 child to opt back out of an ancestor's `opacity`. Rendering it as a sibling,
 positioned from the same text geometry, keeps it at full strength.
 
 Matching is per text run: PDF.js emits one text node per run of text sharing
 a style, so a query spanning two adjacent runs (a word split across a font
-change, mid-way through) will not be found. This covers the ordinary case —
-a whole word or phrase within one run — without reimplementing the text
+change, mid-way through) will not be found. This covers the ordinary case,
+a whole word or phrase within one run, without reimplementing the text
 layer's own internal fragmentation.
 
 ## Props
@@ -138,7 +138,7 @@ layer's own internal fragmentation.
 | `url` | `string` | Where to fetch the document from. Required. |
 | `mimeType` | `string` | Type hint. Detection falls back to extension and magic bytes when it is wrong or generic. |
 | `fileName` | `string` | Improves extension detection and names the download. Inferred from `url` otherwise. |
-| `fetchOptions` | `RequestInit` | Passed to `fetch` — credentials, auth headers, cache mode. |
+| `fetchOptions` | `RequestInit` | Passed to `fetch`: credentials, auth headers, cache mode. |
 | `maxBytes` | `number` | Refuse documents larger than this. Default 100 MB. |
 | `className` | `string` | Added to the root element. |
 | `onLoad` | `(meta: DocumentMeta) => void` | Fires with the detected kind, effective MIME type and size. |
@@ -151,14 +151,14 @@ The component fills its container, so give that container a height.
 Also exported: `resolveKind`, `guessKind`, `extensionOf`, `fileNameOf`,
 `mimeForKind`, `useDocumentSource`, `RENDERERS`, `THUMBNAILS`, and
 `DocumentPreviewError` (whose `code` is one of `fetch`, `http`, `too-large`,
-`parse`, `aborted`). `guessKind` is the synchronous half of `resolveKind` —
-MIME hint and file name only, no bytes — returning `null` when only the bytes
+`parse`, `aborted`). `guessKind` is the synchronous half of `resolveKind`:
+MIME hint and file name only, no bytes, returning `null` when only the bytes
 can decide.
 
 ### Custom renderers
 
 Every renderer receives `{ data: ArrayBuffer, meta, pdf, onError }` and returns
-JSX, so replacing one — or adding a format — needs nothing else:
+JSX, so replacing one, or adding a format, needs nothing else:
 
 ```tsx
 <DocumentPreview
@@ -168,7 +168,7 @@ JSX, so replacing one — or adding a format — needs nothing else:
 ```
 
 The keys are `DocKind` values: `pdf`, `docx`, `xlsx`, `pptx`, `markdown`, `json`,
-`xml`, `csv`, `image`, `html`, `video`, `audio`, `text` — and `unsupported`,
+`xml`, `csv`, `image`, `html`, `video`, `audio`, `text`, and `unsupported`,
 which replaces the built-in "unsupported format" state for files nothing can
 render. `thumbnails` on
 `DocumentThumbnail` works the same way.
@@ -191,11 +191,11 @@ offline behaviour and the `pdf` asset wiring are identical.
 | PowerPoint | Slide 1, through the same slide renderer the reader uses |
 | Images | The image, framed with `object-fit` |
 | HTML | The document, in the same sandboxed iframe the reader uses, scaled down |
-| Video | The first frame, captured to a canvas — the same "real page 1" treatment as PDF and PPTX |
+| Video | The first frame, captured to a canvas, the same "real page 1" treatment as PDF and PPTX |
 | Audio | The typed icon; audio has no visual frame to show |
 | Markdown | The opening of the document, rendered and sanitised |
 | JSON / XML | The opening, pretty-printed and highlighted |
-| CSV / TSV | The first lines, in the tile's monospace page — same treatment as Text |
+| CSV / TSV | The first lines, in the tile's monospace page, same treatment as Text |
 | Text | The first lines, in the tile's monospace page |
 
 Spreadsheets fit their **width** rather than filling the tile: a sheet has no
@@ -204,7 +204,7 @@ columns instead of previewing it.
 
 ### Placeholders and fallbacks
 
-Every tile shows a typed icon from its very first frame — a distinct pictograph
+Every tile shows a typed icon from its very first frame: a distinct pictograph
 and accent per format, with the extension spelled out beneath. There is no
 anonymous grey box at any point:
 
@@ -212,17 +212,17 @@ anonymous grey box at any point:
   which reads the MIME hint and file name **synchronously**, so a slow download
   shows a spreadsheet tile immediately rather than becoming one several seconds
   later. When neither the hint nor the name identifies the file, a neutral page
-  is shown — the bytes decide, and asserting a format there would be a guess
+  is shown; the bytes decide, and asserting a format there would be a guess
   rather than a hint.
 - **While parsing**, the same placeholder stays up. Opening a large `.docx` or
   `.pptx` is not instant, and the tile does not flash an empty frame in between.
 - **Permanently**, for a legacy `.doc`, an unknown format, a TIFF outside
-  Safari, or a document whose parse fails — at full opacity, naming the format.
+  Safari, or a document whose parse fails, at full opacity, naming the format.
 
 `data-state` on the root is `loading`, `ready` or `error`; `data-mode` is
 `render` or `icon`; `data-fit` is the framing in force. In render mode
 `data-kind` carries the **detected** kind only and stays `loading` until the
-bytes confirm it — the guess drives the icon,
+bytes confirm it; the guess drives the icon,
 never that attribute. In icon mode there is nothing to detect from, so it
 carries the guessed kind, or `unknown`.
 
@@ -238,7 +238,7 @@ does no parsing, and paints on the first frame. Use it for long lists, for the
 rows of a table, or wherever a preview is not worth a download.
 
 The tradeoff is detection. With nothing fetched, the kind comes from
-`guessKind` — the MIME hint and file name only — so a file served as
+`guessKind`, the MIME hint and file name only, so a file served as
 `application/octet-stream` from a URL with no extension shows a neutral page
 icon instead of its real type. In `render` mode the same file is identified from
 its magic bytes. If you need that certainty, you need the bytes.
@@ -252,10 +252,10 @@ nothing to defer. `data-kind` carries the guessed kind, or `unknown`.
 | ---- | ---- | ----------- |
 | `url` | `string` | Where to fetch the document from. Required. |
 | `mimeType` `fileName` `fetchOptions` | | As on `DocumentPreview`. |
-| `maxBytes` | `number` | Default **25 MB** — lower than the reader's 100 MB, since a tile is not worth a large download. |
+| `maxBytes` | `number` | Default **25 MB**, lower than the reader's 100 MB, since a tile is not worth a large download. |
 | `width` `height` | `number` | Tile size. Optional: the component measures itself, so sizing `.dp-thumb` in CSS works too. Defaults to 200 × 260. |
 | `fit` | `'cover' \| 'contain'` | `cover` (default) crops to fill for a uniform grid; `contain` letterboxes the whole page. Ignored when `mode` is `icon`. |
-| `mode` | `'render' \| 'icon'` | `render` (default) previews the document. `icon` shows only the typed file icon and **fetches nothing** — see below. |
+| `mode` | `'render' \| 'icon'` | `render` (default) previews the document. `icon` shows only the typed file icon and **fetches nothing** (see below). |
 | `lazy` | `boolean` | Default `true`. Defers fetching until the tile nears the viewport. |
 | `rootMargin` | `string` | How far ahead of the viewport `lazy` starts loading. Default `'300px'`. |
 | `onLoad` `onError` | | As on `DocumentPreview`. |
@@ -276,14 +276,14 @@ Each tile is `role="img"` with an `aria-label` of the file name, and its rendere
 content is `aria-hidden`, so a grid reads as a list of documents instead of
 reciting the body text of every file in it.
 
-**`lazy` and scroll containers.** `rootMargin` expands the observer's root — the
-viewport — but not any intermediate `overflow: auto` ancestor. If your grid
+**`lazy` and scroll containers.** `rootMargin` expands the observer's root (the
+viewport), but not any intermediate `overflow: auto` ancestor. If your grid
 scrolls inside its own container, tiles load as they enter that container rather
 than `rootMargin` ahead of it. That is the browser's behaviour, not a setting.
 
 ## Theming
 
-Both roots — `.dp-root` and `.dp-thumb` — declare the same CSS custom properties,
+Both roots, `.dp-root` and `.dp-thumb`, declare the same CSS custom properties,
 so one rule restyles the reader and every tile:
 
 ```css
@@ -302,12 +302,12 @@ the thumbnail icons take a per-format accent from `--dp-icon-*` (`--dp-icon-pdf`
 
 A dark palette is applied automatically under `prefers-color-scheme: dark`, and
 the loading tile's pulse is stilled under `prefers-reduced-motion: reduce`. No
-webfonts are loaded for any of this — the offline guarantee below covers the
+webfonts are loaded for any of this; the offline guarantee below covers the
 stylesheet too.
 
 ## Format detection
 
-`mimeType` is a hint, not the last word — servers routinely hand back Office
+`mimeType` is a hint, not the last word: servers routinely hand back Office
 files as `application/octet-stream`. Detection runs in three stages, first
 confident answer winning:
 
@@ -315,7 +315,7 @@ confident answer winning:
    RFC 6839 structured suffixes are understood, so `application/vnd.api+json`
    and `application/rss+xml` resolve to JSON and XML.
 2. **File extension**, from `fileName` or the URL path.
-3. **Magic bytes** — `%PDF`, the OLE2 signature for legacy Office files, image
+3. **Magic bytes**: `%PDF`, the OLE2 signature for legacy Office files, image
    signatures (PNG, JPEG, GIF, BMP, WebP's RIFF container, AVIF/HEIC's `ftyp`
    brand, TIFF in both byte orders), and for zip containers a look inside for
    `word/document.xml`, `xl/workbook.xml` or `ppt/presentation.xml`.
@@ -335,8 +335,8 @@ than as XML, because someone opening one wants the picture.
 ## Images
 
 Decoding is the browser's job, so anything it displays works. There is no format
-whitelist — one would reject formats browsers gained support for after this was
-written — so a file the browser cannot decode reports that through the image's
+whitelist (one would reject formats browsers gained support for after this was
+written), so a file the browser cannot decode reports that through the image's
 own error event and offers a download instead.
 
 | Control | |
@@ -361,20 +361,20 @@ rather than interpolation. Transparency is drawn over a checkerboard.
 system codecs; Chrome and Firefox never have, and nothing client-side changes
 that short of bundling a decoder.
 
-It is still detected — by extension and by both byte orders' signatures,
-including BigTIFF — so that it fails *informatively*: browsers that cannot
+It is still detected, by extension and by both byte orders' signatures,
+including BigTIFF, so that it fails *informatively*: browsers that cannot
 decode it show "This browser cannot display image/tiff" with a download link,
 instead of the vague unsupported state these files landed in whenever the server
 did not label the type.
 
 Making TIFF display everywhere would need a JS/WASM decoder (`utif` is MIT and
 around 30 kB) drawing to a canvas. That is a deliberate omission, not an
-oversight — multi-page TIFFs would also want page navigation of their own.
+oversight: multi-page TIFFs would also want page navigation of their own.
 
 ## HTML
 
 Rendered inside a same-origin sandboxed iframe (`sandbox="allow-same-origin"`,
-deliberately no `allow-scripts`) — the same containment DOCX already uses, and
+deliberately no `allow-scripts`), the same containment DOCX already uses, and
 for the same two reasons: nothing in an HTML file should ever execute, and a
 document's own stylesheet must not leak into your app. The markup is passed
 through DOMPurify before it ever reaches the iframe, so the sandbox is defence
@@ -384,14 +384,14 @@ in depth rather than the only safeguard. See [Security](#security).
 
 Decoded and played by the browser, the same "no whitelist" philosophy as
 images: whatever codecs the browser has, it plays, and a file it cannot decode
-reports that through the element's own error event with a download link — the
+reports that through the element's own error event with a download link, the
 same fallback TIFF gets.
 
 **Container support is broad, codec support is not.** MP4/WebM containers
 open everywhere; whether a given file *plays* depends on the codec inside it
 (H.264 and VP8/VP9 are close to universal, AV1 and some HEVC variants are not).
 MOV in particular tends to fail outside Safari, the same story as TIFF. There
-is no way to know this in advance from the container alone — the player
+is no way to know this in advance from the container alone; the player
 reports it once it actually tries to decode the stream.
 
 A file that never resolves to a definite decoded/failed state within a few
@@ -412,14 +412,14 @@ original bytes and a wrap toggle for long lines.
   indenting them would rewrite whitespace that is significant in mixed content
   like `<p>text <b>bold</b> more</p>`.
 - **Malformed input is not swallowed.** The original text is shown with the
-  parser's complaint, and the view starts on Raw — a broken document is exactly
+  parser's complaint, and the view starts on Raw: a broken document is exactly
   when you need the actual bytes.
 - Highlighting is skipped above 2 MB, where the element count costs more than
   the colour is worth.
 
 ## CSV and TSV
 
-Rendered as an actual `<table>` — a header row plus the data — with a **Raw**
+Rendered as an actual `<table>` (a header row plus the data) with a **Raw**
 toggle for the original text and a wrap toggle in that view. The delimiter is
 detected automatically: more tabs than commas on the first line means TSV.
 
@@ -432,7 +432,7 @@ row lengths disagree is not something a grid can represent faithfully, so the
 view starts on Raw with a note explaining why, rather than silently drawing a
 misleading table.
 
-CSV has no reliable magic-byte signature — unlike JSON, there is nothing to
+CSV has no reliable magic-byte signature: unlike JSON, there is nothing to
 confirm a run of comma-separated text actually *is* CSV rather than prose that
 happens to contain commas. So detection here stops at the MIME type and file
 extension; an unlabelled CSV with a generic type and no extension falls back
@@ -445,7 +445,7 @@ PPTX is the one format where pure-browser rendering is genuinely approximate.
 `pptxtojson` reports roughly 80% layout fidelity overall, and ~95% for decks
 authored normally by hand. Expect degradation on complex commercial templates,
 deeply nested groups, and unusual shape geometry. Charts, video and audio render
-as labelled placeholders — a read-only preview should not have to bundle a
+as labelled placeholders; a read-only preview should not have to bundle a
 charting engine. Slide transitions and animations are not rendered.
 
 Two things the renderer does to keep decks legible:
@@ -454,7 +454,7 @@ Two things the renderer does to keep decks legible:
   font sizes in `pt`, which browsers render at 1.333×. Left alone, text
   overflows the box it was measured into and titles clip to their first word.
 - **Text shrinks to fit its shape**, like PowerPoint's "shrink text on
-  overflow". The fonts a deck names — Calibri, Aptos — are almost never
+  overflow". The fonts a deck names, Calibri and Aptos among them, are almost never
   installed on the viewing machine, so the browser substitutes different metrics
   and text that fit in PowerPoint no longer does. Shrinking absorbs that instead
   of wrapping into a neighbouring element.
@@ -462,7 +462,7 @@ Two things the renderer does to keep decks legible:
 An alternative worth knowing about: a real OOXML layout engine compiled to WASM
 ([OfficeCLI](https://github.com/iOfficeAI/OfficeCLI), via
 `@simple-office-previewer`) renders Office formats with higher fidelity and even
-evaluates formulas. It was trialled here and removed — it costs ~4.9 MB brotli
+evaluates formulas. It was trialled here and removed: it costs ~4.9 MB brotli
 on first use, takes seconds on spreadsheets, and ships its own viewer chrome
 that does not match the rest of the component. The DOM renderers are faster and
 visually consistent. If you need maximum fidelity over those things, it drops in
@@ -472,8 +472,8 @@ through the `renderers` prop.
 
 Formula cells display the **cached result** stored in the file, which is what
 Excel itself shows before it recalculates. Nothing here evaluates formulas, so a
-file whose cached values disagree with its formulas — one edited by a tool that
-shifted rows without adjusting ranges, say — displays the stale value.
+file whose cached values disagree with its formulas, one edited by a tool that
+shifted rows without adjusting ranges, say, displays the stale value.
 
 Number formats *are* applied. ExcelJS reports a cell's format string but never
 applies it, so without `numfmt` dates surface as raw serials and currency as
@@ -503,8 +503,8 @@ to a hosted converter or viewer.
 Documents are untrusted input. Four formats can carry markup, and all four are
 treated accordingly:
 
-- **DOCX** renders inside a same-origin iframe with `sandbox="allow-same-origin"`
-  — deliberately no `allow-scripts`. This also stops docx-preview's broad
+- **DOCX** renders inside a same-origin iframe with `sandbox="allow-same-origin"`,
+  deliberately no `allow-scripts`. This also stops docx-preview's broad
   injected CSS from leaking into your app. The output is passed through DOMPurify
   as well.
 - **PPTX** text, table cells and speaker notes arrive as HTML from the parser and
@@ -523,7 +523,7 @@ download rather than after it has all been buffered.
 
 ## Development
 
-Requires **Node 22+** — `pdfjs-dist` 6, Vite 8 and Vitest 5 all need it.
+Requires **Node 22+**: `pdfjs-dist` 6, Vite 8 and Vitest 5 all need it.
 `.nvmrc` pins it.
 
 ```bash
@@ -536,7 +536,7 @@ npm run dev        # demo app at http://localhost:5173
 | Command | What it does |
 | ------- | ------------ |
 | `npm run verify` | Offline check, typecheck, unit tests, library build |
-| `npm test` | Vitest — detection, formatting, component states, real-parser fixtures |
+| `npm test` | Vitest: detection, formatting, component states, real-parser fixtures |
 | `npm run smoke` | Builds the demo and drives every format in headless Chromium |
 | `npm run smoke:offline` | The same, with all off-origin requests blocked |
 | `npm run fixtures` | Regenerate the sample documents |
@@ -545,10 +545,10 @@ npm run dev        # demo app at http://localhost:5173
 Currently 255 unit tests and 88 browser checks.
 
 Fixtures are **generated rather than committed as binaries**, so they stay
-reviewable in a diff — see `scripts/`, which builds the DOCX, XLSX and PPTX
+reviewable in a diff; see `scripts/`, which builds the DOCX, XLSX and PPTX
 packages by hand along with a PDF, a PNG (`png.mjs`), a TIFF (`tiff.mjs`) and a
 WAV (`wav.mjs`). The video fixture is deliberately just a WebM signature with
-no decodable stream behind it — hand-rolling a real encoded frame is a
+no decodable stream behind it: hand-rolling a real encoded frame is a
 different order of work, so it exercises the "cannot play" path instead, the
 same strategy the TIFF fixture already uses. `npm run smoke` starts and stops
 its own preview server.
@@ -579,16 +579,16 @@ formatter and the syntax tokeniser. What differs is only the presentation.
   pure-browser renderer exists for them.
 - Password-protected documents cannot be opened.
 - TIFF displays in Safari only; elsewhere it reports that it cannot be shown.
-- Video and audio playback depends on the browser's own codec support — see
-  [Video and audio](#video-and-audio) — and MOV in particular tends to fail
+- Video and audio playback depends on the browser's own codec support (see
+  [Video and audio](#video-and-audio)), and MOV in particular tends to fail
   outside Safari.
 - PPTX charts, video and audio are placeholders; animations and transitions are
   not rendered.
 - Excel formulas show their cached result; nothing is recalculated.
 - PDF search matches within a single text run, not across two adjacent runs
-  a query happens to straddle — see [PDF search](#pdf-search).
+  a query happens to straddle (see [PDF search](#pdf-search)).
 - Read-only: no editing, annotation or form filling.
-- Word and PowerPoint thumbnails parse the **whole** file to show one page —
+- Word and PowerPoint thumbnails parse the **whole** file to show one page;
   neither `docx-preview` nor `pptxtojson` exposes a partial mode. The lower
   default `maxBytes` on thumbnails is the mitigation.
 - Thumbnails are live DOM, not bitmaps, so they cannot be persisted, exported or

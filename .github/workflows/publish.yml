@@ -7,7 +7,10 @@ name: Release
 #   1. Set packages/doc-preview's version to the number you gave it.
 #   2. Run the same build+test gate as CI, plus the full browser smoke suite.
 #   3. Commit that version bump, tag it (vX.Y.Z), and push both to main.
-#   4. Publish the package to npm.
+#   4. Publish the package to npm via Trusted Publishing (OIDC) — no npm
+#      token is stored in this repo. This requires the package to have a
+#      trusted publisher configured on npmjs.com pointing at this repo and
+#      this workflow file (Package settings → Trusted Publisher on npmjs.com).
 #
 # If any step fails, nothing after it runs — in particular, a failed build
 # or test means no tag is pushed and nothing is published.
@@ -43,6 +46,10 @@ jobs:
             exit 1
           fi
 
+      # Trusted Publishing needs npm 11.5.1+; Node 22's bundled npm may be
+      # older, so upgrade explicitly rather than relying on whatever ships.
+      - run: npm install -g npm@latest
+
       - run: npm ci
 
       - name: Set package version
@@ -69,6 +76,6 @@ jobs:
           git push origin HEAD:main
           git push origin "v${{ inputs.version }}"
 
+      # No NODE_AUTH_TOKEN here: Trusted Publishing authenticates this job
+      # to npm via the OIDC token implied by `id-token: write` above.
       - run: npm publish -w packages/doc-preview --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
