@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
-import { DocumentThumbnail } from 'doc-preview'
-import type { ThumbnailProps } from 'doc-preview'
+import { DocumentThumbnail } from 'offline-doc-preview'
+import type { ThumbnailProps } from 'offline-doc-preview'
 import { fixture, jsonlessResponse, stubIntersectionObserver } from './helpers'
 
 function mockFetch(body: ArrayBuffer, contentType: string, init?: { status?: number }) {

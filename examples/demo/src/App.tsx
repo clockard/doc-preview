@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { DocumentPreview, DocumentThumbnail } from 'doc-preview'
-import type { DocumentMeta, ThumbFit, ThumbMode } from 'doc-preview'
+import { DocumentPreview, DocumentThumbnail } from 'offline-doc-preview'
+import type { DocumentMeta, ThumbFit, ThumbMode } from 'offline-doc-preview'
 import { PDF_ASSETS } from './pdfAssets'
 
 interface Sample {

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
-import { DocumentPreview } from 'doc-preview'
-import type { RendererProps } from 'doc-preview'
+import { DocumentPreview } from 'offline-doc-preview'
+import type { RendererProps } from 'offline-doc-preview'
 import { fixture, jsonlessResponse } from './helpers'
 
 function mockFetch(body: ArrayBuffer, contentType: string, init?: { status?: number }) {

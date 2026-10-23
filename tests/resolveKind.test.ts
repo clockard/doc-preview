@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { extensionOf, fileNameOf, guessKind, resolveKind } from 'doc-preview'
+import { extensionOf, fileNameOf, guessKind, resolveKind } from 'offline-doc-preview'
 import { bytes, fixture } from './helpers'
 
 const DOCX_MIME = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'

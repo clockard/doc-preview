@@ -30,7 +30,7 @@ export function formatCellValue(cell: Cell): string {
   if (value instanceof Date) {
     // numfmt works in serials; General on a date still needs a date pattern.
     const serial = toExcelSerial(value)
-    if (serial === null) return value.toISOString().slice(0, 10)
+    if (serial == null) return value.toISOString().slice(0, 10)
     const datePattern = pattern && isDateFormat(pattern) ? pattern : 'yyyy-mm-dd'
     return safeFormat(datePattern, serial, () => value.toISOString().slice(0, 10))
   }
@@ -54,7 +54,7 @@ export function formatCellValue(cell: Cell): string {
  * silently, and only for them. Reading the UTC parts keeps the displayed date
  * equal to the one stored in the file, in every timezone.
  */
-function toExcelSerial(date: Date): number | null {
+function toExcelSerial(date: Date): number | undefined {
   return dateToSerial([
     date.getUTCFullYear(),
     date.getUTCMonth() + 1,
