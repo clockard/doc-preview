@@ -2,7 +2,7 @@
 // this app's own origin. Nothing here may point at a CDN — that is the whole
 // offline requirement, and PDF.js falls back to a remote host if these are unset.
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
-import type { PdfAssetOptions } from 'doc-preview'
+import type { PdfAssetOptions } from 'offline-doc-preview'
 
 export const PDF_ASSETS: PdfAssetOptions = {
   workerSrc,

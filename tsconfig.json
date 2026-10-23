@@ -18,7 +18,7 @@
     "types": ["vite/client", "node"],
     "baseUrl": ".",
     // Typecheck against source so a missing dist build never breaks `npm run typecheck`.
-    "paths": { "doc-preview": ["packages/doc-preview/src/index.ts"] }
+    "paths": { "offline-doc-preview": ["packages/doc-preview/src/index.ts"] }
   },
   "include": ["packages/*/src", "examples/*/src", "scripts", "tests"]
 }
